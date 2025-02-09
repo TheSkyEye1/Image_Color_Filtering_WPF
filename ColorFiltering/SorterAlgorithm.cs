@@ -65,37 +65,91 @@ namespace ColorFiltering
 
 
         //Вот тут работает
-        private void FillPalletByPixelsFromImage()
+        private void FillPaletteByPixelsFromImage()
         {
-            PixelPallet = new List<ColoredPixel>();
+            PixelPallet = new List<ColoredPixel>(sourceMat.Rows * sourceMat.Cols);
+
             for (int r = 0; r < sourceMat.Rows; r++)
+            {
                 for (int c = 0; c < sourceMat.Cols; c++)
                 {
                     Vec3b bgr = sourceMat.At<Vec3b>(r, c);
-                    int colorValue = bgr.Item0 + bgr.Item1 * 1000 + bgr.Item2 * 1000000;
+                    int colorValue = (bgr.Item2 << 16) | (bgr.Item1 << 8) | bgr.Item0;
                     PixelPallet.Add(new ColoredPixel(colorValue, bgr));
                 }
+            }
 
-            PixelPallet.Sort((p1,p2) => p2.Num.CompareTo(p1.Num));
+            PixelPallet.Sort((p1, p2) => p2.Num.CompareTo(p1.Num));
         }
-        private void FillImageFromPallet()
+
+        private void FillImageFromPalette()
         {
             int i = 0;
-
             for (int r = 0; r < sourceMat.Rows; r++)
+            {
                 for (int c = 0; c < sourceMat.Cols; c++)
                 {
                     sourceMat.At<Vec3b>(r, c) = PixelPallet[i].Color;
                     i++;
                 }
+            }
         }
+
+        private void FillPaletteByHSV()
+        {
+            PixelPallet = new List<ColoredPixel>();
+
+            for (int r = 0; r < sourceMat.Rows; r++)
+            {
+                for (int c = 0; c < sourceMat.Cols; c++)
+                {
+                    Vec3b bgr = sourceMat.At<Vec3b>(r, c);
+
+                    Mat singlePixelMat = new Mat(1, 1, MatType.CV_8UC3);
+                    singlePixelMat.Set(0, 0, bgr);
+
+                    Cv2.CvtColor(singlePixelMat, singlePixelMat, ColorConversionCodes.BGR2HSV);
+
+                    Vec3b hsvVec = singlePixelMat.At<Vec3b>(0, 0);
+
+                    double hue = hsvVec.Item0;  
+                    double saturation = hsvVec.Item1; 
+                    double value = hsvVec.Item2;
+
+                    double colorValue = hue * 1000000 + saturation * 1000 + value;
+                    PixelPallet.Add(new ColoredPixel((int)colorValue, bgr));
+                }
+            }
+
+            PixelPallet.Sort((p1, p2) => p1.Num.CompareTo(p2.Num));
+
+            int i = 0;
+            for (int r = 0; r < sourceMat.Rows; r++)
+            {
+                for (int c = 0; c < sourceMat.Cols; c++)
+                {
+                    sourceMat.At<Vec3b>(r, c) = PixelPallet[i].Color;
+                    i++;
+                }
+            }
+        }
+
 
         public Mat sortImage2(Mat source)
         {
             sourceMat = source;
-            FillPalletByPixelsFromImage();
-            FillImageFromPallet();
+            FillPaletteByPixelsFromImage();
+            FillImageFromPalette();
             return sourceMat;
         }
+
+        public Mat SortImageByHSV(Mat source)
+        {
+            sourceMat = source;
+            FillPaletteByHSV();
+            FillImageFromPalette();
+            return sourceMat;
+        }
+
     }
 }
