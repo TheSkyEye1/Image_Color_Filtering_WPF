@@ -32,7 +32,8 @@ namespace ColorFiltering
         }
         private void FilterImage_Click(object sender, RoutedEventArgs e)
         {
-            ResultImage.Source = sorter.sortImage(sourceMat).ToWriteableBitmap(PixelFormats.Bgr24);
+            //ResultImage.Source = sorter.sortImage(sourceMat).ToWriteableBitmap(PixelFormats.Bgr24);
+            ResultImage.Source = sorter.sortImage2(sourceMat).ToWriteableBitmap(PixelFormats.Bgr24);
         }
 
         private void LoadImage_Click(object sender, RoutedEventArgs e)

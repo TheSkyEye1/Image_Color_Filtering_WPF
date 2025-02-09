@@ -4,17 +4,19 @@ namespace ColorFiltering
 {
     public class ColoredPixel
     {
-        public Vec3b color { get; private set; }
-        public int count { get; private set; }
-        public ColoredPixel(Vec3b color)
+        public Vec3b Color { get; private set; }
+        public int Num { get; private set; }
+        public int Count { get; private set; }
+        public ColoredPixel(int num, Vec3b color)
         {
-            this.color = color;
+            this.Num = num;
+            this.Color = color;
         }
         public bool compareColors(Vec3b col)
         {
-            if(col.Item0 == color.Item0 && col.Item1 == color.Item1 && col.Item2 == color.Item2)
+            if(col.Item0 == Color.Item0 && col.Item1 == Color.Item1 && col.Item2 == Color.Item2)
             {
-                count++;
+                Count++;
                 return true;
             }
             return false;

@@ -20,7 +20,7 @@
 
         <Image x:Name="OriginalImage"/>
         <Image x:Name="ResultImage" Grid.Column="2"/>
-        <Button x:Name="Load" Content="Sort image" Grid.Row="1" Margin="20,20,20,20" FontSize="25" Click="LoadImage_Click"/>
+        <Button x:Name="Load" Content="Load Image" Grid.Row="1" Margin="20,20,20,20" FontSize="25" Click="LoadImage_Click"/>
         <Button x:Name="Filter" Content="Filter image" Grid.Column="2" Grid.Row="1" Margin="20,20,20,20" FontSize="25" Click="FilterImage_Click"/>
     </Grid>
 </Window>
