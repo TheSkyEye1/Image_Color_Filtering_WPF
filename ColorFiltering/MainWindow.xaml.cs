@@ -43,9 +43,20 @@ namespace ColorFiltering
             if (openFileDialog.ShowDialog() == true)
             {
                 string FilePath = openFileDialog.FileName;
-                sourceMat = Cv2.ImRead(FilePath, ImreadModes.Color);
-                OriginalImage.Source = sourceMat.ToWriteableBitmap(PixelFormats.Bgr24);
+
+
+                Mat image = Cv2.ImRead(FilePath);
+                Mat sortedImage = ImageSorter.SortPixelsByColor(image);
+
+                ResultImage.Source = sortedImage.ToWriteableBitmap(PixelFormats.Bgr24);
+
+                //Cv2.ImShow("Sorted Image", sortedImage);
+                //Cv2.WaitKey();
+
+                //sourceMat = Cv2.ImRead(FilePath, ImreadModes.Color);
+                //OriginalImage.Source = sourceMat.ToWriteableBitmap(PixelFormats.Bgr24);
             }
         }
+
     }
 }
